@@ -8,27 +8,60 @@ class AdminPage extends Component {
 
     this.state = {
       loading: false,
-      users: []
+      users: [],
+      houses: []
     };
   }
 
   componentDidMount() {
     this.setState({ loading: true });
 
-    this.props.firebase.users().on("value", snapshot => {
-      const usersObject = snapshot.val();
+    // this.props.firebase.users().on("value", snapshot => {
+    //   const usersObject = snapshot.val();
 
-      const usersList = Object.keys(usersObject).map(key => ({
-        ...usersObject[key],
-        uid: key
-      }));
+    //   const usersList = Object.keys(usersObject).map(key => ({
+    //     ...usersObject[key],
+    //     uid: key
+    //   }));
 
-      this.setState({
-        users: usersList,
-        loading: false
+    //   this.setState({
+    //     users: usersList,
+    //     loading: false
+    //   });
+    // });
+
+    this.props.firebase
+      .houses()
+      .then(snapshot => {
+        console.log(snapshot);
+        snapshot.docs.forEach(doc => {
+          console.log(doc.id, doc.data().images, doc.data().price, doc.data().title);
+        });
+      })
+      // snapshot
+      // .forEach(doc => {
+      //   console.log(snapshot);
+      //   console.log(doc.id, "=>", doc.data());
+      // })
+      .catch(err => {
+        console.log("Error getting docs", err);
       });
-    });
   }
+
+  // this.props.firebase.houses().on("value", snapshot => {
+  //   const housesObject = snapshot.val();
+
+  //   const housesList = Object.keys(housesObject).map(key => ({
+  //     ...housesObject[key],
+  //     uid: key
+  //   }));
+
+  //   this.setState({
+  //     houses: housesList,
+  //     loading: false
+  //   });
+  // });
+  // }
 
   componentWillUnmount() {
     this.props.firebase.users().off();
