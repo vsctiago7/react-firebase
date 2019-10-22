@@ -31,18 +31,17 @@ class AdminPage extends Component {
     // });
 
     this.props.firebase
-      .houses()
+      .users()
       .then(snapshot => {
-        console.log(snapshot);
-        snapshot.docs.forEach(doc => {
-          console.log(doc.id, doc.data().images, doc.data().price, doc.data().title);
-        });
+        console.log(snapshot.docs);
+        const userList = snapshot.docs.map(doc => doc.data());
+
+        this.setState({
+          ...this.state,
+          users: userList,
+          loading: false
+        })
       })
-      // snapshot
-      // .forEach(doc => {
-      //   console.log(snapshot);
-      //   console.log(doc.id, "=>", doc.data());
-      // })
       .catch(err => {
         console.log("Error getting docs", err);
       });
